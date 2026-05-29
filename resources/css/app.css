@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .js-rich-text-editor {
+        @apply relative flex flex-col overflow-hidden bg-white border border-gray-300 rounded-xl shadow-sm;
+        min-height: 20rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .js-rich-text-editor .ql-toolbar.ql-snow {
+        @apply border-0 border-b border-gray-200 bg-gray-50;
+        flex-shrink: 0;
+    }
+
+    .js-rich-text-editor .ql-container.ql-snow {
+        @apply border-0;
+        height: auto;
+        flex: 1 1 auto;
+        min-height: 16rem;
+    }
+
+    .js-rich-text-editor .ql-editor {
+        min-height: 16rem;
+        height: auto;
+        overflow-y: auto;
+        font-size: 0.875rem;
+        line-height: 1.75;
+    }
+
+    .js-rich-text-editor .ql-editor.ql-blank::before {
+        left: 15px;
+        right: 15px;
+        font-style: normal;
+        color: rgb(156 163 175);
+    }
+}
