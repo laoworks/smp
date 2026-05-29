@@ -1,3 +1,17 @@
+@php
+    $websiteSettings = \Illuminate\Support\Facades\Cache::remember(
+        'website_settings',
+        now()->addMinutes(30),
+        fn() => \App\Models\PengaturanWebsite::query()->first()
+    );
+    $profilSekolah = \Illuminate\Support\Facades\Cache::remember(
+        'profil_sekolah_front',
+        now()->addMinutes(30),
+        fn() => \App\Models\ProfilSekolah::query()->first()
+    );
+
+    $schoolName = $profilSekolah?->nama_sekolah ?: ($websiteSettings?->nama_website ?: config('app.name', 'Website Sekolah'));
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -5,7 +19,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ $schoolName }}</title>
         @include('components.favicon')
 
         <!-- Fonts -->

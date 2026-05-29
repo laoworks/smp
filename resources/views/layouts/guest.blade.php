@@ -1,3 +1,20 @@
+@php
+    $websiteSettings = \Illuminate\Support\Facades\Cache::remember(
+        'website_settings',
+        now()->addMinutes(30),
+        fn() => \App\Models\PengaturanWebsite::query()->first()
+    );
+    $profilSekolah = \Illuminate\Support\Facades\Cache::remember(
+        'profil_sekolah_front',
+        now()->addMinutes(30),
+        fn() => \App\Models\ProfilSekolah::query()->first()
+    );
+
+    $schoolName = $profilSekolah?->nama_sekolah ?: ($websiteSettings?->nama_website ?: config('app.name', 'Website Sekolah'));
+    $logoUrl = filled($websiteSettings?->logo)
+        ? asset('storage/' . $websiteSettings->logo)
+        : (filled($profilSekolah?->logo) ? asset('storage/' . $profilSekolah->logo) : null);
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -5,7 +22,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>Login - {{ $schoolName }}</title>
         @include('components.favicon')
 
         <!-- Fonts -->
@@ -16,23 +33,6 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased text-slate-900 bg-[linear-gradient(180deg,#f7f5ff_0%,#ffffff_45%,#f8fafc_100%)]">
-        @php
-            $websiteSettings = \Illuminate\Support\Facades\Cache::remember(
-                'website_settings',
-                now()->addMinutes(30),
-                fn() => \App\Models\PengaturanWebsite::query()->first()
-            );
-            $profilSekolah = \Illuminate\Support\Facades\Cache::remember(
-                'profil_sekolah_front',
-                now()->addMinutes(30),
-                fn() => \App\Models\ProfilSekolah::query()->first()
-            );
-
-            $schoolName = $profilSekolah?->nama_sekolah ?: ($websiteSettings?->nama_website ?: config('app.name', 'Website Sekolah'));
-            $logoUrl = filled($websiteSettings?->logo)
-                ? asset('storage/' . $websiteSettings->logo)
-                : (filled($profilSekolah?->logo) ? asset('storage/' . $profilSekolah->logo) : null);
-        @endphp
 
         <div class="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
             <div class="mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col justify-center">
