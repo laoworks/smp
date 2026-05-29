@@ -33,10 +33,6 @@ Route::get('/galeri/{album}', [PublicPageController::class, 'galleryShow'])->nam
 Route::get('/ppdb', [PublicPageController::class, 'ppdb'])->name('public.ppdb.index');
 Route::post('/ppdb', [PublicPageController::class, 'storePpdb'])->name('public.ppdb.store');
 
-Route::view('/dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

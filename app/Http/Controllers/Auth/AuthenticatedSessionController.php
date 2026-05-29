@@ -34,18 +34,18 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        // 🔥 VERIFIKATOR → bisa diarahkan ke admin juga (opsional)
+        // 🔥 VERIFIKATOR → diarahkan ke admin panel
         if ($user->hasRole('verifikator')) {
             return redirect()->route('admin.dashboard');
         }
 
-        // 🔥 GURU → user dashboard
+        // 🔥 GURU → profil akun
         if ($user->hasRole('guru')) {
-            return redirect()->route('dashboard');
+            return redirect()->route('profile.edit');
         }
 
         // 🔥 DEFAULT USER
-        return redirect()->route('dashboard');
+        return redirect()->route('profile.edit');
     }
 
     /**

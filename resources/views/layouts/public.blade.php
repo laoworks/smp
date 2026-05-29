@@ -15,6 +15,15 @@
         ? asset('storage/' . $websiteSettings->logo)
         : (filled($profilSekolah?->logo) ? asset('storage/' . $profilSekolah->logo) : null);
     $searchQuery = trim((string) request('q', ''));
+    $authUser = auth()->user();
+    $authDestinationUrl = route('login');
+    $authDestinationLabel = 'Login';
+
+    if ($authUser) {
+        $canAccessAdminDashboard = $authUser->isSuperAdmin() || $authUser->isAdmin() || $authUser->isVerifikator();
+        $authDestinationUrl = $canAccessAdminDashboard ? route('admin.dashboard') : route('profile.edit');
+        $authDestinationLabel = $canAccessAdminDashboard ? 'Dashboard' : 'Profil';
+    }
 
     $publicMenus = [
         ['label' => 'Beranda', 'route' => route('home'), 'active' => 'home', 'group' => 'main'],
@@ -326,10 +335,10 @@
                             </form>
                             @auth
                                 <a
-                                    href="{{ route('dashboard') }}"
+                                    href="{{ $authDestinationUrl }}"
                                     class="rounded-lg bg-[var(--brand-primary)] px-5 py-3 text-[16px] font-semibold text-white shadow-sm transition hover:opacity-95"
                                 >
-                                    Dashboard
+                                    {{ $authDestinationLabel }}
                                 </a>
                             @else
                                 <a
@@ -427,11 +436,11 @@
                             <p class="px-3 pb-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Akun</p>
                             @auth
                                 <a
-                                    href="{{ route('dashboard') }}"
+                                    href="{{ $authDestinationUrl }}"
                                     class="block rounded-md bg-[var(--brand-primary)] px-3 py-2.5 text-center text-base font-semibold text-white transition hover:opacity-95"
                                     @click="mobileMenuOpen = false"
                                 >
-                                    Dashboard
+                                    {{ $authDestinationLabel }}
                                 </a>
                             @else
                                 <a
